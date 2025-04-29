@@ -1,14 +1,14 @@
 package org.rgt.libraryhub.dto;
 
 public class BorrowedBookListRequest {
-	private Integer bookId;
+	private Long bookId;
 	private String title;
 	private String author;
-	private Integer patronId; 
+	private Long patronId; 
 	private String patronName;
 	private Integer borrowedQuantity;
 
-	public BorrowedBookListRequest(Integer bookId, String title, String author, Integer patronId, String patronName,
+	public BorrowedBookListRequest(Long bookId, String title, String author, Long patronId, String patronName,
 			Integer borrowedQuantity) {
 		this.bookId = bookId;
 		this.title = title;
@@ -19,11 +19,11 @@ public class BorrowedBookListRequest {
 	}
 
 	// Getters and Setters
-	public Integer getBookId() {
+	public Long getBookId() {
 		return bookId;
 	}
 
-	public void setBookId(Integer bookId) {
+	public void setBookId(Long bookId) {
 		this.bookId = bookId;
 	}
 
@@ -43,11 +43,11 @@ public class BorrowedBookListRequest {
 		this.author = author;
 	}
 
-	public Integer getPatronId() {
+	public Long getPatronId() {
 		return patronId;
 	}
 
-	public void setPatronId(Integer patronId) {
+	public void setPatronId(Long patronId) {
 		this.patronId = patronId;
 	}
 

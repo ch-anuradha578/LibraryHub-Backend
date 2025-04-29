@@ -5,8 +5,8 @@ import java.util.List;
 import org.rgt.libraryhub.dto.BorrowedBookListRequest;
 
 public interface BorrowedBookService {
-    String borrowBookById(Integer bookId, Integer patronId, Integer quantity);
-    String returnBookById(Integer bookId, Integer patronId, Integer quantity);
+	String borrowBookById(Long bookId, Long patronId, Integer quantity);
+	String returnBookById(Long bookId, Long patronId, Integer borrowedQuantity);
     List<BorrowedBookListRequest> listBorrowedBooks();
-    List<BorrowedBookListRequest> listBooksBorrowedByPatron(Integer patronId);
+    List<BorrowedBookListRequest> listBooksBorrowedByPatron(Long patronId);
 }

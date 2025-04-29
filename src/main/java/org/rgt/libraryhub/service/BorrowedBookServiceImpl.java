@@ -27,20 +27,23 @@ public class BorrowedBookServiceImpl implements BorrowedBookService {
 	private BookRepository bookRepo;
 
 	@Override
-	public String borrowBookById(Integer bookId, Integer patronId, Integer quantity) {
+	public String borrowBookById(Long bookId, Long patronId, Integer quantity) {
 		if (quantity == null || quantity <= 0)
 			return "Invalid quantity";
 
 		Patron patron = patronRepo.findById(patronId).orElse(null);
-		if (patron == null)
+		if (patron == null) {
 			return "Patron ID not found";
+		}
 
 		Book book = bookRepo.findById(bookId).orElse(null);
-		if (book == null)
+		if (book == null) {
 			return "Book ID not found";
+		}
 
+		// Check if there are enough available copies of the book
 		if (book.getAvailableQuantity() < quantity)
-			return "Not enough copies available";
+			return "Not enough copies of this book available";
 
 		// Decrease available quantity
 		book.setAvailableQuantity(book.getAvailableQuantity() - quantity);
@@ -48,7 +51,7 @@ public class BorrowedBookServiceImpl implements BorrowedBookService {
 		bookRepo.save(book);
 
 		// Check if this patron already borrowed this book
-		List<BorrowedBook> existingBorrowList = borrowedBookRepo.findByBookIdAndPatronId(bookId, patronId);
+		List<BorrowedBook> existingBorrowList = borrowedBookRepo.findByBook_BookIdAndPatron_PatronId(bookId, patronId);
 
 		if (!existingBorrowList.isEmpty()) {
 			// Update existing borrow record
@@ -58,10 +61,10 @@ public class BorrowedBookServiceImpl implements BorrowedBookService {
 		} else {
 			// Create a new borrow record for this patron-book combo
 			BorrowedBook borrowedBook = new BorrowedBook();
-			borrowedBook.setBookId(book.getBookId());
+			borrowedBook.setBook(book);
 			borrowedBook.setTitle(book.getTitle());
 			borrowedBook.setAuthor(book.getAuthor());
-			borrowedBook.setPatronId(patron.getPatronId());
+			borrowedBook.setPatron(patron);
 			borrowedBook.setPatronName(patron.getName());
 			borrowedBook.setBorrowedQuantity(quantity);
 			borrowedBookRepo.save(borrowedBook);
@@ -71,20 +74,22 @@ public class BorrowedBookServiceImpl implements BorrowedBookService {
 	}
 
 	@Override
-	public String returnBookById(Integer bookId, Integer patronId, Integer borrowedQuantity) {
+	public String returnBookById(Long bookId, Long patronId, Integer borrowedQuantity) {
 		if (borrowedQuantity == null || borrowedQuantity <= 0)
 			return "Invalid quantity";
 
 		Patron patron = patronRepo.findById(patronId).orElse(null);
-		if (patron == null)
+		if (patron == null) {
 			return "Patron ID not found";
+		}
 
 		Book book = bookRepo.findById(bookId).orElse(null);
-		if (book == null)
+		if (book == null) {
 			return "Book ID not found";
+		}
 
 		// Find the borrow record for this patron and book
-		List<BorrowedBook> borrowedBooks = borrowedBookRepo.findByBookIdAndPatronId(bookId, patronId);
+		List<BorrowedBook> borrowedBooks = borrowedBookRepo.findByBook_BookIdAndPatron_PatronId(bookId, patronId);
 		if (borrowedBooks.isEmpty())
 			return "Book not borrowed by this patron";
 
@@ -121,15 +126,21 @@ public class BorrowedBookServiceImpl implements BorrowedBookService {
 	}
 
 	@Override
-	public List<BorrowedBookListRequest> listBooksBorrowedByPatron(Integer patronId) {
-		List<BorrowedBook> borrowedBooks = borrowedBookRepo.findByPatronId(patronId);
+	public List<BorrowedBookListRequest> listBooksBorrowedByPatron(Long patronId) {
+		Patron patron = patronRepo.findById(patronId).orElse(null);
+		if (patron == null) {
+			return null;
+		}
+
+		List<BorrowedBook> borrowedBooks = borrowedBookRepo.findByPatron_PatronId(patronId);
 
 		if (borrowedBooks.isEmpty()) {
 			return Collections.emptyList();
 		}
 
-		return borrowedBooks.stream().map(bb -> new BorrowedBookListRequest(bb.getBookId(), bb.getTitle(),
-				bb.getAuthor(), bb.getPatronId(), bb.getPatronName(), bb.getBorrowedQuantity()))
+		return borrowedBooks.stream()
+				.map(bb -> new BorrowedBookListRequest(bb.getBook().getBookId(), bb.getTitle(), bb.getAuthor(),
+						bb.getPatron().getPatronId(), bb.getPatronName(), bb.getBorrowedQuantity()))
 				.collect(Collectors.toList());
 	}
 
@@ -141,8 +152,9 @@ public class BorrowedBookServiceImpl implements BorrowedBookService {
 			return Collections.emptyList();
 		}
 
-		return borrowedBooks.stream().map(bb -> new BorrowedBookListRequest(bb.getBookId(), bb.getTitle(),
-				bb.getAuthor(), bb.getPatronId(), bb.getPatronName(), bb.getBorrowedQuantity()))
+		return borrowedBooks.stream()
+				.map(bb -> new BorrowedBookListRequest(bb.getBook().getBookId(), bb.getTitle(), bb.getAuthor(),
+						bb.getPatron().getPatronId(), bb.getPatronName(), bb.getBorrowedQuantity()))
 				.collect(Collectors.toList());
 	}
 

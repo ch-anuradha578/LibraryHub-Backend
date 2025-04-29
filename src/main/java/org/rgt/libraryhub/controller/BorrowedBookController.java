@@ -40,8 +40,8 @@ public class BorrowedBookController {
 		return switch (result) {
 		case "Patron ID not found" -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patron ID not found.");
 		case "Book ID not found" -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book ID not found.");
-		case "Not enough copies available" ->
-			ResponseEntity.status(HttpStatus.CONFLICT).body("Not enough copies available.");
+		case "Not enough copies of this book available" ->
+			ResponseEntity.status(HttpStatus.CONFLICT).body("Not enough copies of this book available.");
 		case "Invalid quantity" -> ResponseEntity.badRequest().body("Quantity must be greater than 0.");
 		default -> ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error: " + result);
 		};
@@ -75,23 +75,26 @@ public class BorrowedBookController {
 	}
 
 	// List all borrowed books (for all patrons)
-    @GetMapping("/borrowed")
-    public ResponseEntity<?> listBorrowedBooks() {
-        List<BorrowedBookListRequest> books = borrowedBookService.listBorrowedBooks();
-        if (books.isEmpty()) {
-            return new ResponseEntity<>("No Borrowed Books found", HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(books, HttpStatus.OK);
-    }
+	@GetMapping("/borrowed")
+	public ResponseEntity<?> listBorrowedBooks() {
+		List<BorrowedBookListRequest> books = borrowedBookService.listBorrowedBooks();
+		if (books.isEmpty()) {
+			return new ResponseEntity<>("No Borrowed Books found", HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(books, HttpStatus.OK);
+	}
 
-    // List borrowed books by patron
-    @GetMapping("/borrowed/{patronId}")
-    public ResponseEntity<?> listBooksBorrowedByPatron(@PathVariable Integer patronId) {
-        List<BorrowedBookListRequest> books = borrowedBookService.listBooksBorrowedByPatron(patronId);
-        if (books.isEmpty()) {
-            return new ResponseEntity<>("No Books Borrowed by this Patron ID: " + patronId, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(books, HttpStatus.OK);
-    }
+	// List borrowed books by patron
+	@GetMapping("/borrowed/{patronId}")
+	public ResponseEntity<?> listBooksBorrowedByPatron(@PathVariable Long patronId) {
+		List<BorrowedBookListRequest> books = borrowedBookService.listBooksBorrowedByPatron(patronId);
+		if (books == null) {
+			return new ResponseEntity<>("Patron ID not found.", HttpStatus.NOT_FOUND);
+		}
+		if (books.isEmpty()) {
+			return new ResponseEntity<>("No Books Borrowed by this Patron ID: " + patronId, HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(books, HttpStatus.OK);
+	}
 
 }

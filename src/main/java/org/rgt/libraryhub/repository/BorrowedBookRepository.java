@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BorrowedBookRepository extends JpaRepository<BorrowedBook, Integer> {
-    List<BorrowedBook> findByBookIdAndPatronId(Integer bookId, Integer patronId);
-    List<BorrowedBook> findByPatronId(Integer patronId);
+public interface BorrowedBookRepository extends JpaRepository<BorrowedBook, Long> {
+    List<BorrowedBook> findByBook_BookIdAndPatron_PatronId(Long bookId, Long patronId);
+    List<BorrowedBook> findByBook_BookId(Long bookId); 
+    List<BorrowedBook> findByPatron_PatronId(Long patronId);
 }

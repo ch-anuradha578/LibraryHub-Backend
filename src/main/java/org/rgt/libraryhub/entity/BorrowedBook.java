@@ -1,32 +1,51 @@
 package org.rgt.libraryhub.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "borrowed_books")
 public class BorrowedBook {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	private Integer bookId;
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "book_Id", nullable = false)
+	private Book book;
+
+	@ManyToOne
+	@JoinColumn(name = "patron_Id", nullable = false)
+	private Patron patron;
 
 	private String author;
-	private Integer patronId;
-	private String patronName;
 	private String title;
+	private String patronName;
 	private Integer borrowedQuantity;
 
 	// Getters and Setters
-	public Integer getBookId() {
-		return bookId;
+
+	public Long getId() {
+		return id;
 	}
 
-	public void setBookId(Integer bookId) {
-		this.bookId = bookId;
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Book getBook() {
+		return book;
+	}
+
+	public void setBook(Book book) {
+		this.book = book;
+	}
+
+	public Patron getPatron() {
+		return patron;
+	}
+
+	public void setPatron(Patron patron) {
+		this.patron = patron;
 	}
 
 	public String getAuthor() {
@@ -35,14 +54,6 @@ public class BorrowedBook {
 
 	public void setAuthor(String author) {
 		this.author = author;
-	}
-
-	public Integer getPatronId() {
-		return patronId;
-	}
-
-	public void setPatronId(Integer patronId) {
-		this.patronId = patronId;
 	}
 
 	public String getPatronName() {

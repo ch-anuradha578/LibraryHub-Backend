@@ -1,25 +1,25 @@
 package org.rgt.libraryhub.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "books")
 public class Book {
 	@Id
-    private Integer bookId;
-    private String title;
-    private String author;
-    private String isAvailable;
-    private Integer totalQuantity;
-    private Integer availableQuantity; 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long bookId;
 
-	public Integer getBookId() {
+	private String title;
+	private String author;
+	private String isAvailable;
+	private Integer totalQuantity;
+	private Integer availableQuantity;
+
+	public Long getBookId() {
 		return bookId;
 	}
 
-	public void setBookId(Integer bookId) {
+	public void setBookId(Long bookId) {
 		this.bookId = bookId;
 	}
 
@@ -62,5 +62,5 @@ public class Book {
 	public void setAvailableQuantity(Integer availableQuantity) {
 		this.availableQuantity = availableQuantity;
 	}
-	
+
 }

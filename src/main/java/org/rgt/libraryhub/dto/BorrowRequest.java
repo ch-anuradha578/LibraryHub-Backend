@@ -1,24 +1,24 @@
 package org.rgt.libraryhub.dto;
 
 public class BorrowRequest {
-    private Integer bookId;
-    private Integer patronId;
+    private Long bookId;
+    private Long patronId;
     private Integer quantity;
 
     // Getters and Setters
-    public Integer getBookId() {
+    public Long getBookId() {
         return bookId;
     }
 
-    public void setBookId(Integer bookId) {
+    public void setBookId(Long bookId) {
         this.bookId = bookId;
     }
 
-    public Integer getPatronId() {
+    public Long getPatronId() {
         return patronId;
     }
 
-    public void setPatronId(Integer patronId) {
+    public void setPatronId(Long patronId) {
         this.patronId = patronId;
     }
 

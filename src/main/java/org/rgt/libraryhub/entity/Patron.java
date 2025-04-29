@@ -1,21 +1,22 @@
 package org.rgt.libraryhub.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "patrons")
 public class Patron {
 	@Id
-    private Integer patronId;
-    private String name;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long patronId;
+	private String name;
 
-	public Integer getPatronId() {
+	// Getters and Setters
+
+	public Long getPatronId() {
 		return patronId;
 	}
 
-	public void setPatronId(Integer patronId) {
+	public void setPatronId(Long patronId) {
 		this.patronId = patronId;
 	}
 

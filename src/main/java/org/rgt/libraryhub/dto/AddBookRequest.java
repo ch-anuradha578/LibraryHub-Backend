@@ -2,20 +2,11 @@ package org.rgt.libraryhub.dto;
 
 public class AddBookRequest {
 
-    private Integer bookId;
     private String title;
     private String author;
     private Integer totalQuantity;
 
     // Getters and Setters
-    public Integer getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(Integer bookId) {
-        this.bookId = bookId;
-    }
-
     public String getTitle() {
         return title;
     }
